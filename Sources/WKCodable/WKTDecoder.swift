@@ -130,18 +130,13 @@ public extension WKTDecoder {
     }
     
     private func scanType() -> WKTTypeCode? {
-        #if !os(macOS)
-        var rawType: String? = ""
-        #else
-        var rawType: NSString? = ""
-        #endif
-        let boundarySet = CharacterSet.whitespaces.union(CharacterSet(charactersIn: "("))
-        scanner.scanUpToCharacters(from: boundarySet, into: &rawType)
-        
-        guard let type = WKTTypeCode(rawValue: String(rawType!)) else {
-            return nil
+    let boundarySet = CharacterSet.whitespaces.union(CharacterSet(charactersIn: "("))
+
+    guard let rawType = scanner.scanUpToCharacters(from: boundarySet),
+          let type = WKTTypeCode(rawValue: rawType) else {
+        return nil
         }
-        
+    
         return type
     }
     
